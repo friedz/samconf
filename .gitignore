@@ -3,8 +3,18 @@
 .cprofile
 .settings
 .asciidoctorconfig.adoc
-**/build
-**/build-*
-dist-*
 compile_commands.json
 ci/sshconfig
+
+# Temporary folders for building and/or testing
+__pycache__
+_build
+_demo
+dist-*
+b
+bld
+**/build
+**/build-*
+r
+release
+*.swp
