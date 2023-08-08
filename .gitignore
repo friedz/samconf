@@ -1,0 +1,9 @@
+# eclipse project files and folders
+.profile
+.cprofile
+.settings
+.asciidoctorconfig.adoc
+**/build
+**/build-*
+dist-*
+compile_commands.json
