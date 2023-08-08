@@ -7,3 +7,4 @@
 **/build-*
 dist-*
 compile_commands.json
+ci/sshconfig

@@ -3,11 +3,24 @@ set -e -u
 
 CMD_PATH=$(realpath $(dirname $0))
 BASE_DIR=${CMD_PATH%/*}
-REPO_ROOT_DIR="$BASE_DIR/.."
 CMAKE_PARAM=${CMAKE_PARAM:-""}
 NINJA_PARAM=${NINJA_PARAM:-"-j$(nproc)"}
+SOURCES_URI=${SOURCES_URI:-https://github.com/emlix/}
 
-export LC_ALL=C
+CMOCKA_EXTENSIONS_REPO_NAME=${CMOCKA_REPO_NAME:-cmocka-extensions.git}
+CMOCKA_EXTENSIONS_REPO_PATH=${CMOCKA_REPO:-${SOURCES_URI}/${CMOCKA_EXTENSIONS_REPO_NAME}}
+CMOCKA_EXTENSIONS_REPO_REF=${CMOCKA_REPO_REF:-integration}
+CMOCKA_EXTENSIONS_REPO_REF="fs/rename-doc-target"
+
+CMOCKA_MOCKS_REPO_NAME=${CMOCKA_REPO_NAME:-cmocka-mocks.git}
+CMOCKA_MOCKS_REPO_PATH=${CMOCKA_REPO:-${SOURCES_URI}/${CMOCKA_MOCKS_REPO_NAME}}
+CMOCKA_MOCKS_REPO_REF=${CMOCKA_REPO_REF:-integration}
+CMOCKA_MOCKS_REPO_REF="fs/rename-doc-target"
+
+SAFU_REPO_NAME=${CMOCKA_REPO_NAME:-cmocka-mocks.git}
+SAFU_REPO_PATH=${CMOCKA_REPO:-${SOURCES_URI}/${CMOCKA_MOCKS_REPO_NAME}}
+SAFU_REPO_REF=${CMOCKA_REPO_REF:-integration}
+SAFU_REPO_REF="task/#19338-elos-extract-safu-into-separate-project"
 
 PARAM=""
 OPTION_CI=0
@@ -47,11 +60,19 @@ if [ $OPTION_PACKAGE -eq 1 ]; then
     OPTION_CLEAN=1
 fi
 
-BUILD_DIR="$BASE_DIR/build/$BUILD_TYPE/"
+CMAKE_PARAM="${CMAKE_PARAM} -D CMOCKA_EXTENSIONS_URI=${CMOCKA_EXTENSIONS_REPO_PATH}\
+                            -D CMOCKA_EXTENSIONS_REF=${CMOCKA_EXTENSIONS_REPO_REF}"
+CMAKE_PARAM="${CMAKE_PARAM} -D CMOCKA_MOCKS_URI=${CMOCKA_MOCKS_REPO_PATH}\
+                            -D CMOCKA_MOCKS_REF=${CMOCKA_MOCKS_REPO_REF}"
+CMAKE_PARAM="${CMAKE_PARAM} -D SAFU_URI=${SAFU_REPO_PATH}\
+                            -D SAFU_REF=${SAFU_REPO_REF}"
+
+BUILD_DIR="$BASE_DIR/build/$BUILD_TYPE"
 RESULT_DIR="$BUILD_DIR/result"
 DIST_DIR="$BUILD_DIR/dist"
 CMAKE_BUILD_DIR="$BUILD_DIR/cmake"
 export LOCAL_INSTALL_DIR=${LOCAL_INSTALL_DIR:-"$DIST_DIR"}
+CMAKE_PARAM="${CMAKE_PARAM} -D INSTALL_DIR=${LOCAL_INSTALL_DIR}"
 
 DEP_BUILD_PARAM=""
 if [ $OPTION_CLEAN -eq 1 ]; then
@@ -66,13 +87,6 @@ if [ $OPTION_VERBOSE -eq 1 ]; then
     NINJA_PARAM="$NINJA_PARAM -v"
 fi
 
-export mock_safu_DIR="$LOCAL_INSTALL_DIR/usr/local/lib/cmake/mock_safu"
-DEPENDENCIES="safu cmocka_mocks cmocka_extensions"
-for dependency in $DEPENDENCIES; do
-    declare -x ${dependency}_DIR="$LOCAL_INSTALL_DIR/usr/local/lib/cmake/${dependency}"
-    $REPO_ROOT_DIR/${dependency}/ci/build.sh $BUILD_TYPE $DEP_BUILD_PARAM
-done
-
 echo -e "\n#### Building $(basename $BASE_DIR) ($BUILD_TYPE) ####"
 mkdir -p $RESULT_DIR $DIST_DIR
 if [ ! -e $CMAKE_BUILD_DIR/build.ninja ]; then
@@ -84,6 +98,6 @@ ninja -C $CMAKE_BUILD_DIR $NINJA_PARAM all install 2>&1 | tee $RESULT_DIR/build_
 
 re=${PIPESTATUS[0]}
 
-$REPO_ROOT_DIR/shared/ci/check_build_log.py $RESULT_DIR/build_log.txt
+$BASE_DIR/ci/check_build_log.py $RESULT_DIR/build_log.txt
 
 exit $re
