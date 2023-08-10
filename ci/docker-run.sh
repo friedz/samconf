@@ -33,7 +33,7 @@ if [ "$SSH_AUTH_SOCK" ]; then
 fi
 
 docker run --rm -it $SSH_AGENT_OPTS \
-    -v "$BASE_DIR"/..:/base/samconf \
+    -v "$BASE_DIR":/base/samconf \
     -w /base/samconf \
     --privileged \
     --device=/dev/kmsg \
