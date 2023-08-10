@@ -1,9 +1,12 @@
 # SPDX-License-Identifier: MIT
 cmake_minimum_required(VERSION 3.21)
+include(cmake/ConfigureLibrary.cmake)
+
+list(APPEND CMAKE_PREFIX_PATH "${INSTALL_DIR}/usr/local/lib/cmake")
 
 configureLibrary(cmocka_extensions ${CMOCKA_EXTENSIONS_URI} ${CMOCKA_EXTENSIONS_REF})
 configureLibrary(cmocka_mocks ${CMOCKA_MOCKS_URI} ${CMOCKA_MOCKS_REF})
-configureLibrary(cmocka_mocks ${SAFU_URI} ${SAFU_REF})
+configureLibrary(safu ${SAFU_URI} ${SAFU_REF})
 
 include(cmake/project.cmake)
 project(samconf LANGUAGES C VERSION ${SAMCONF_VERSION})
@@ -30,5 +33,5 @@ if(UNIT_TESTS)
 endif(UNIT_TESTS)
 
 if(PACKAGING)
-  include(Packing.cmake)
+  include(cmake/Packing.cmake)
 endif(PACKAGING)
