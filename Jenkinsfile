@@ -52,7 +52,7 @@ pipeline {
 
   agent {
     dockerfile {
-        filename './samconf/ci/Dockerfile'
+        filename './ci/Dockerfile'
         reuseNode true
         additionalBuildArgs "--build-arg USER=jenkins \
                         --build-arg UID=\$(id -u) --build-arg GID=\$(id -g) --build-arg ASMCOV_URI=${ASMCOV_URI}"
@@ -78,14 +78,14 @@ pipeline {
           debug: {
             gitlabCommitStatus("samconf: build debug") {
               sh '''#!/bin/bash -xe
-                ./samconf/ci/build.sh --ci Debug
+                ./ci/build.sh --ci Debug
               '''
             }
           },
           release: {
             gitlabCommitStatus("samconf: build release") {
               sh '''#!/bin/bash -xe
-                ./samconf/ci/build.sh --ci Release
+                ./ci/build.sh --ci Release
               '''
             }
           }
@@ -98,19 +98,19 @@ pipeline {
         parallel(
           debug: {
             gitlabCommitStatus("samconf: utest debug") {
-              sh './samconf/ci/run_utest.sh'
+              sh './ci/run_utest.sh'
             }
           },
           release: {
             gitlabCommitStatus("samconf: utest release") {
-              sh './samconf/ci/run_utest.sh Release'
+              sh './ci/run_utest.sh Release'
             }
           }
         )
       }
       post {
         failure {
-          archiveArtifacts artifacts: "samconf/build/Debug/Testing/Temporary/,samconf/build/Release/Testing/Temporary/", fingerprint: true
+          archiveArtifacts artifacts: "build/Debug/Testing/Temporary/,build/Release/Testing/Temporary/", fingerprint: true
         }
       }
     }
@@ -119,14 +119,14 @@ pipeline {
       steps {
         gitlabCommitStatus("samconf: smoke test") {
           sh '''#!/bin/bash -xe
-            ./samconf/ci/run_smoketests.sh
-            ./samconf/ci/run_smoketests.sh Release
+            ./ci/run_smoketests.sh
+            ./ci/run_smoketests.sh Release
           '''
         }
       }
       post {
         always {
-          archiveArtifacts artifacts: "samconf/build/Debug/result/smoketest_results/,samconf/build/Release/result/smoketest_results/", fingerprint: true
+          archiveArtifacts artifacts: "build/Debug/result/smoketest_results/,build/Release/result/smoketest_results/", fingerprint: true
         }
       }
     }
@@ -135,14 +135,14 @@ pipeline {
       steps{
         gitlabCommitStatus("samconf: lint sources") {
           sh '''#!/bin/bash -xe
-            ./samconf/ci/code_lint.py --ci
-            ./samconf/ci/checklicense.sh
+            ./ci/code_lint.py --ci
+            ./ci/checklicense.sh
           '''
         }
       }
       post {
         always {
-          archiveArtifacts artifacts: "samconf/build/Release/cmake/lint_results/**", fingerprint: true
+          archiveArtifacts artifacts: "build/Release/cmake/lint_results/**", fingerprint: true
         }
       }
     }
@@ -150,12 +150,12 @@ pipeline {
     stage('Build documentation') {
       steps{
         gitlabCommitStatus("samconf: documentation") {
-          sh './samconf/ci/build_doc.sh'
+          sh './ci/build_doc.sh'
         }
       }
       post {
         success {
-          archiveArtifacts artifacts: "samconf/doc/build/**", fingerprint: true
+          archiveArtifacts artifacts: "doc/build/**", fingerprint: true
         }
       }
     }
@@ -164,13 +164,13 @@ pipeline {
       steps {
         gitlabCommitStatus("samconf: coverage") {
           sh '''#!/bin/bash -xe
-            ./samconf/ci/create_coverage.sh
+            ./ci/create_coverage.sh
           '''
         }
       }
       post {
         always {
-          archiveArtifacts artifacts: "samconf/build/Release/result/coverage_results/**", fingerprint: true
+          archiveArtifacts artifacts: "build/Release/result/coverage_results/**", fingerprint: true
         }
       }
     }
@@ -213,7 +213,7 @@ pipeline {
     }
     always {
       withCredentials([usernamePassword(credentialsId: 'kpi_creds', passwordVariable: 'KPI_API_TOKEN', usernameVariable: 'KPI_API_URL')]) {
-        sh './samconf/ci/publish_kpis.sh'
+        sh './ci/publish_kpis.sh'
       }
       cleanWs(deleteDirs: true, patterns: [
           [pattern: '*', type: 'INCLUDE'],
