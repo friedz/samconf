@@ -4,6 +4,8 @@
 
 #include "samconf/samconf.h"
 
+__BEGIN_DECLS
+
 typedef struct samconfConfigBackend samconfConfigBackend_t;
 
 typedef struct samconfConfigBackendOps {
@@ -22,5 +24,7 @@ struct samconfConfigBackend {
 samconfConfigStatusE_t samconfConfigBackendNew(samconfConfigBackend_t **backend, const samconfConfigBackendOps_t *ops);
 samconfConfigStatusE_t samconfConfigBackendInit(samconfConfigBackend_t *backend, const samconfConfigBackendOps_t *ops);
 samconfConfigStatusE_t samconfConfigBackendDelete(samconfConfigBackend_t *backend);
+
+__END_DECLS
 
 #endif /* CONFIG_BACKEND_H */
