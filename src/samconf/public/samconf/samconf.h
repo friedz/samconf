@@ -3,6 +3,8 @@
 
 #include <samconf/samconf_types.h>
 
+__BEGIN_DECLS
+
 const struct samconfConfigBackendOps *samconfGetBackendOps(size_t idx);
 samconfConfigStatusE_t samconfLookupBackend(const char *location, struct samconfConfigBackend **backend);
 samconfConfigStatusE_t samconfVerifySignature(const char *location);
@@ -23,3 +25,5 @@ samconfConfigStatusE_t samconfConfigSetInt(samconfConfig_t *config, int64_t intV
 samconfConfigStatusE_t samconfConfigSetBool(samconfConfig_t *config, bool value);
 samconfConfigStatusE_t samconfConfigSetReal(samconfConfig_t *config, double value);
 int samconfInitConfig();
+
+__END_DECLS

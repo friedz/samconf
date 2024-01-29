@@ -33,10 +33,14 @@ typedef struct samconfUri {
     char *fragment;
 } samconfUri_t;
 
+__BEGIN_DECLS
+
 samconfConfigStatusE_t samconfUriPattern(regex_t **pattern);
 samconfConfigStatusE_t samconfUriNew(samconfUri_t **uri, const char *uriString);
 samconfConfigStatusE_t samconfUriInit(samconfUri_t *uri, const char *uriString);
 samconfConfigStatusE_t samconfUriDelete(samconfUri_t *uri);
 samconfConfigStatusE_t samconfUriDeleteMembers(samconfUri_t *uri);
+
+__END_DECLS
 
 #endif /* SAMCONF_URI_H */

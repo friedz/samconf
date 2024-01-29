@@ -9,6 +9,8 @@
 
 extern const samconfConfigBackendOps_t samconfJsonOps;
 
+__BEGIN_DECLS
+
 samconfConfigStatusE_t samconfJsonBackendOpen(const char *location, samconfConfigBackend_t *backend);
 
 samconfConfigStatusE_t samconfJsonBackendLoad(samconfConfigBackend_t *backend, bool isSigned, samconfConfig_t **config);
@@ -16,5 +18,7 @@ samconfConfigStatusE_t samconfJsonBackendLoad(samconfConfigBackend_t *backend, b
 samconfConfigStatusE_t samconfJsonBackendSupports(const char *location, bool *isSupported);
 
 samconfConfigStatusE_t samconfJsonBackendClose(samconfConfigBackend_t *backend);
+
+__END_DECLS
 
 #endif /* SAMCONF_JSON_BACKEND_H */
