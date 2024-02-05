@@ -1,8 +1,16 @@
 # SPDX-License-Identifier: MIT
 cmake_minimum_required(VERSION 3.21)
+
 include(cmake/ConfigureLibrary.cmake)
 include(cmake/project.cmake)
-project(samconf LANGUAGES C VERSION ${SAMCONF_VERSION})
+
+project(
+  samconf
+    DESCRIPTION "Signed And Mergeable CONFiguration"
+    VERSION ${SAMCONF_VERSION}
+    LANGUAGES C
+)
+
 project_set_environment()
 project_set_version_variables()
 project_add_documentation_target(
