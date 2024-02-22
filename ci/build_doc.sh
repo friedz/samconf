@@ -7,7 +7,7 @@ MD_DOCUMENTAION_DIR="${BASE_DIR}/documentation"
 SAMCONF_SOURCE_SOURCE_DIR=${BASE_DIR}/src
 
 SPHINX_SOURCE_DIR=${BASE_DIR}/doc/source
-SPHINX_BUILD_DIR=${BASE_DIR}/doc/build
+SPHINX_BUILD_DIR=${BASE_DIR}/build/doc
 SPHINX_GENERATED_SOURCE_DIR=${BASE_DIR}/doc/source/generated
 
 . "${SPHINX_VENV-${BASE_DIR}/.venv/}/bin/activate"
@@ -45,6 +45,6 @@ Developer documentation
 createApiDocu
 createDeveloperDocu
 
-export PATH="${PATH}:${BASE_DIR}/build/Debug/dist/usr/local/bin"
-export LD_LIBRARY_PATH="${LD_LIBRARY_PATH-"./"}:${BASE_DIR}/build/Debug/dist/usr/local/lib"
+export PATH="${PATH}:${BASE_DIR}/build/Release/dist/usr/local/bin"
+export LD_LIBRARY_PATH="${LD_LIBRARY_PATH-"./"}:${BASE_DIR}/build/Release/dist/usr/local/lib"
 sphinx-build -b html "${SPHINX_SOURCE_DIR}" "${SPHINX_BUILD_DIR}"

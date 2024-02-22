@@ -98,6 +98,7 @@ publish-kpis:
 
 documentation:
   stage: build
+  needs: [build-release]
   script:
     - ci/docker-run.sh ci/build_doc.sh
   artifacts:
