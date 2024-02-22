@@ -1,5 +1,3 @@
-variables:
-  SOURCES_URI: "https://${GIT_USER_TOKEN}@gitlabintern.emlix.com/elektrobit/base-os"
 
 stages:
   - build
@@ -22,6 +20,7 @@ before_script:
 
 build-release:
   stage: build
+  needs: []
   script:
     - ci/docker-run.sh ci/build.sh --ci Release
   artifacts:
@@ -33,6 +32,7 @@ build-release:
 
 build-debug:
   stage: build
+  needs: []
   script:
     - ci/docker-run.sh ci/build.sh --ci Debug
   artifacts:
