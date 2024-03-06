@@ -1,10 +1,12 @@
 #!/bin/sh -e
 #
 # create and run docker build env
-#
-CMD_PATH=$(cd "$(dirname "$0")" && pwd)
-BASE_DIR=${CMD_PATH%/*}
-PROJECT=${BASE_DIR##*/}
+
+CMD_PATH="$(realpath "$(dirname "$0")")"
+BASE_DIR="$(realpath "$CMD_PATH/..")"
+
+. "$BASE_DIR/ci/common_names.sh"
+
 IMAGE_NAME="${PROJECT}-build"
 
 IT="-it"
@@ -28,7 +30,7 @@ docker build \
 
 echo "==> run $PROJECT build container"
 
-if ! [ -e "$BASE_DIR"/ci/sshconfig ]; then
+if ! [ -e "$BASE_DIR/ci/sshconfig" ]; then
     { echo "Host *"
       echo "  User $(id -u -n)"
     } > "$BASE_DIR"/ci/sshconfig
