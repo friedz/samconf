@@ -73,7 +73,7 @@ pipeline {
     }
     stage('Dependecies') {
       steps {
-        gitlabCommitStatus("safu: build dependencies") {
+        gitlabCommitStatus("samconf: build dependencies") {
           sh '''#!/bin/bash -xe
             ./ci/install_deps.py -c ci/dependencies_emlix.json
           '''
